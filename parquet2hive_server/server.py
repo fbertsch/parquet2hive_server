@@ -36,7 +36,7 @@ class Parquet2HiveServer(Resource):
             try:
                 res = lib.get_bash_cmd(dataset=args['dataset'], success_only=args['success-only'], recent_versions=args['use-last-versions'], version=args['dataset-version'])
                 if not debug:
-                    process = Popen(res)
+                    process = Popen(res, shell=True)
                     res = process.communicate()
             except Exception as e:
                 res = "ServerException: {}".format(str(e))
