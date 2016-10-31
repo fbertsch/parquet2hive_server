@@ -38,8 +38,8 @@ class Parquet2HiveServer(Resource):
                 if not debug:
                     process = Popen(res)
                     res = process.communicate()
-            except Exception:
-                res = "Failed"
+            except Exception as e:
+                res = "ServerException: {}".format(str(e))
         else:
             res = msg 
         return {"Result": res}
