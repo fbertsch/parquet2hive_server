@@ -34,9 +34,9 @@ class Parquet2HiveServer(Resource):
 
         if allowed: 
             try:
-                res = lib.get_bash_cmd(args['dataset'], args['success-only'], args['use-last-versions'], args['dataset-version'])
+                res = lib.get_bash_cmd(dataseteargs['dataset'], success_only=args['success-only'], recent_versions=args['use-last-versions'], version=args['dataset-version'])
                 if not debug:
-                    process = Popen(query)
+                    process = Popen(res)
                     res = process.communicate()
             except Exception:
                 res = "Failed"
