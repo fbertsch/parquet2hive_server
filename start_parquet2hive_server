@@ -3,13 +3,13 @@
 from flask import Flask
 from flask_restful import Api
 from parquet2hive_server.server import Parquet2HiveServer 
-from parquet2hive_server.settings import server_port, debug
+from parquet2hive_server.settings import server_dns, server_port, debug
 
-debug = True
 app = Flask(__name__)
 api = Api(app)
 
 api.add_resource(Parquet2HiveServer, '/')
 
 if __name__ == '__main__':
-    app.run(port=server_port, debug=debug)
+    app.run(host=server_dns, port=server_port, debug=debug)
+
