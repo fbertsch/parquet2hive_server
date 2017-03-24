@@ -10,6 +10,7 @@ start_parquet2hive_server
 ##Importing a dataset
 To remotely import a dataset, run 
 ```bash
+export PRESTO_DNS=www.presto.dns
 load_dataset s3://bucket/path/to/dataset
 ```
 
