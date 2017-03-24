@@ -11,11 +11,11 @@ class Parquet2HiveClient():
         self.server = 'http://' + _server_dns
 
     def load(self, **kwargs):
-        kwargs[secret_key] = self._get_secret()
+        kwargs[secret_key] = self.get_secret()
         res = post(self.server, data=kwargs)
         return res.status_code, res.text
 
-    def _get_secret(self):
+    def get_secret(self):
         obj_file = NamedTemporaryFile()
         self.s3.download_file(secret_value_bucket, secret_value_key, obj_file.name)
 
