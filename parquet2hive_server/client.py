@@ -5,16 +5,17 @@ from tempfile import NamedTemporaryFile
 
 class Parquet2HiveClient():
 
-    def __init__(self):
+    def __init__(self, server=None):
         self.s3 = boto3.client('s3')
-        self.server = 'http://{}:{}'.format(server_dns, server_port)
+        _server_dns = server or (server_dns + ':' + server_port)
+        self.server = 'http://' + _server_dns
 
     def load(self, **kwargs):
-        kwargs[secret_key] = self.get_secret()
+        kwargs[secret_key] = self._get_secret()
         res = post(self.server, data=kwargs)
         return res.status_code, res.text
 
-    def get_secret(self):
+    def _get_secret(self):
         obj_file = NamedTemporaryFile()
         self.s3.download_file(secret_value_bucket, secret_value_key, obj_file.name)
 
