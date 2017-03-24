@@ -7,7 +7,7 @@ class Parquet2HiveClient():
 
     def __init__(self, server=None):
         self.s3 = boto3.client('s3')
-        _server_dns = server or (server_dns + ':' + server_port)
+        _server_dns = server or (server_dns + ':' + str(server_port))
         self.server = 'http://' + _server_dns
 
     def load(self, **kwargs):
