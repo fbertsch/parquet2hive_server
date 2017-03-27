@@ -1,8 +1,9 @@
 from flask_restful import Resource, reqparse
+from flask import current_app
 from parquet2hive_modules import parquet2hivelib as lib
 from parquet2hive_server.client import Parquet2HiveClient
 from subprocess import Popen
-from settings import secret_key, debug
+from settings import secret_key
 
 class Parquet2HiveServer(Resource):
 
@@ -35,7 +36,7 @@ class Parquet2HiveServer(Resource):
         if allowed: 
             try:
                 res = lib.get_bash_cmd(location=args['dataset'], success_only=args['success-only'], recent_versions=args['use-last-versions'], version=args['dataset-version'])
-                if not debug:
+                if not current_app.debug:
                     process = Popen(res, shell=True)
                     res = process.communicate()
             except Exception as e:

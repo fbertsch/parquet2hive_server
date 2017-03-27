@@ -15,7 +15,7 @@ api.add_resource(Parquet2HiveServer, '/')
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Start parquet2hive server')
 
-    parser.add_argument('--debug', action='store_true',
+    parser.add_argument('--debug', action='store_true', default=False,
                         help='Run in debug mode and just print sql output') 
 
     parser.add_argument('--port', metavar='N', type=int, default=server_port,
