@@ -22,5 +22,10 @@ if __name__ == '__main__':
                         help='Port to run server on')
 
     args = parser.parse_args()
-    app.run(host=server_dns, port=args.port, debug=args.debug)
+
+    dns = server_dns
+    if not args.debug:
+        dns = '0.0.0.0'
+
+    app.run(host=dns, port=args.port, debug=args.debug)
 
