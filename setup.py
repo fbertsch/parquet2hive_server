@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='parquet2hive_server',
-      version='0.0.4',
+      version='0.0.5',
       author='Frank Bertsch',
       author_email='fbertsch@mozilla.com',
       description='API Endpoint for Parquet2hive',
