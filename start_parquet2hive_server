@@ -1,5 +1,7 @@
 #! /usr/bin/python
 
+import argparse
+
 from flask import Flask
 from flask_restful import Api
 from parquet2hive_server.server import Parquet2HiveServer 
@@ -11,5 +13,14 @@ api = Api(app)
 api.add_resource(Parquet2HiveServer, '/')
 
 if __name__ == '__main__':
-    app.run(host=server_dns, port=server_port, debug=debug)
+    parser = argparse.ArgumentParser(description='Start parquet2hive server')
+
+    parser.add_argument('--debug', action='store_true',
+                        help='Run in debug mode and just print sql output') 
+
+    parser.add_argument('--port', metavar='N', type=int, default=server_port,
+                        help='Port to run server on')
+
+    args = parser.parse_args()
+    app.run(host=server_dns, port=args.port, debug=args.debug)
 
