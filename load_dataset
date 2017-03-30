@@ -1,13 +1,9 @@
 #! /usr/bin/python
 
 from parquet2hive_server.client import Parquet2HiveClient
-import argparse
 import sys
-import os
 
-server = os.environ.get("PRESTO_DNS")
-arg = ['dataset'] + sys.argv[1:]
-args = {arg[i].strip('-'): arg[i+1] for i in xrange(0, len(arg), 2)}
+args = sys.argv[1:]
+client = Parquet2HiveClient()
 
-client = Parquet2HiveClient(server)
-print client.load(**args)
+print client.load(args)

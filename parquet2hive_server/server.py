@@ -9,24 +9,8 @@ class Parquet2HiveServer(Resource):
 
     def __init__(self):
         self.parser = reqparse.RequestParser()
-        self.parser.add_argument('dataset', type=str, help='Location in s3 of dataset location. Must begin with s3://')
-        self.parser.add_argument('success-only', type=bool, default=False, required=False, store_missing=True,
-                                 help='Only process partitions that contain a _SUCCESS file')
-        self.parser.add_argument('dataset-version', type=str, required=False, store_missing=True,
-                                 help='Specify version of the dataset to use with format vyyyymmdd, e.g. v20160514. Cannot be used with --use-last-versions')
-        self.parser.add_argument('use-last-versions', type=int, required=False, store_missing=True,
-                                 help='Load only the most recent version of the dataset, cannot be used with --dataset-version. Defaults to 1')
-
-        #could not successfuly identify alias with flask_restful argparse, hence this
-        self.parser.add_argument('so', type=bool, default=False, required=False, store_missing=True,
-                                 help='Only process partitions that contain a _SUCCESS file')
-        self.parser.add_argument('dv', type=str, required=False, store_missing=True,
-                                 help='Specify version of the dataset to use with format vyyyymmdd, e.g. v20160514. Cannot be used with --use-last-versions')
-        self.parser.add_argument('ulv', type=int, required=False, store_missing=True,
-                                 help='Load only the most recent version of the dataset, cannot be used with --dataset-version. Defaults to 1')
-
-        self.parser.add_argument(secret_key, type=str, required=True,
-                                 help='Secret to authenticate client')
+        self.parser.add_argument(Parquet2HiveClient.arg_key, type=str, required=True)
+        self.parser.add_argument(secret_key, type=str, required=True)
 
         self.client = Parquet2HiveClient()
 
@@ -35,8 +19,9 @@ class Parquet2HiveServer(Resource):
 
         if allowed: 
             try:
-                res = lib.get_bash_cmd(location=args['dataset'], success_only=args['success-only'], recent_versions=args['use-last-versions'], version=args['dataset-version'])
-                if not current_app.debug:
+                print "Args: " + str(args)
+                errored, res = lib.run(args)
+                if not current_app.debug and errored == 0:
                     process = Popen(res, shell=True)
                     res = process.communicate()
             except Exception as e:
@@ -53,8 +38,5 @@ class Parquet2HiveServer(Resource):
         if args[secret_key] != secret:
             allowed = False
             msg = 'Incorrect secret'
-        if args['dataset-version'] is not None and args['use-last-versions'] is not None:
-            allowed = False
-            msg = 'Cannot use both dataset-version and use-last-versions'
 
-        return allowed, args, msg
+        return allowed, args[Parquet2HiveClient.arg_key].split(' '), msg
